@@ -1,0 +1,20 @@
+#!/bin/zsh
+# Script to lock screen with i3lock using a pixelated screenshot of the current screen
+#
+#
+# icon for the lock image that will be the overlay
+icon="$HOME/.config/i3/lock.png"
+# make a temp file to hold the screenshot
+img=$(mktemp /tmp/XXXXXXXXXX.png)
+# use ImageMagick import to take a screenshot of the current screen
+import -window root $img
+# pixelate screenshot to obscure content
+convert $img -scale 10% -scale 1000% $img
+# optional: blur image instead of pixelate
+# convert $img -blur 2,5 $img
+# overlay lock image icon on the pixelated screenshot
+convert $img $icon -gravity center -composite $img
+# use i3lock and lock screen with the pixelated screenshot
+i3lock -u -i $img
+# remove temp file
+rm $img
